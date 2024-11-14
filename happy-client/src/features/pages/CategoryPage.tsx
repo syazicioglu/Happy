@@ -15,6 +15,7 @@ interface Props {
 export default function CategoryPage(){
     return(
         <>
+        <Breadcrumb />
         <Category />
         </>
     )
@@ -96,6 +97,52 @@ function Card({ title, price }: Props) {
           </div>
         </div>
       </div>
+    );
+  }
+
+  function Breadcrumb() {
+    return (
+      <nav
+        aria-label="breadcrumb"
+        className="container mx-auto flex items-center space-x-1 text-sm mt-5"
+      >
+        <a href="#" className="text-gray-600 hover:text-gray-800">
+          Anasayfa
+        </a>
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="#73845e"
+          className="w-4 h-4"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth={2}
+            d="M9 5l7 7-7 7"
+          />
+        </svg>
+  
+        <span className="text-gray-600 hover:text-gray-800">Dekoratif</span>
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="#73845e"
+          className="w-4 h-4"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth={2}
+            d="M9 5l7 7-7 7"
+          />
+        </svg>
+        <span className="text-gray-500">
+          10x36 İthal Malzeme, Pirinç, Orijinal Kabartma
+        </span>
+      </nav>
     );
   }
 
