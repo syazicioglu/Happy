@@ -106,7 +106,7 @@ function Header() {
       },
     ]);
   
-    const handleRemoveItem = (id:any) => {
+    const handleRemoveItem = (id:number) => {
       setCartItems(cartItems.filter((item) => item.id !== id));
     };
   
