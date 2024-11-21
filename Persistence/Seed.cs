@@ -11,7 +11,7 @@ namespace Persistence
     {
         public static async Task SeedData(DataContext context)
         {
-            //if (context.Products.Any() || context.Categories.Any()) return;
+            if (context.Products.Any() || context.Categories.Any()) return;
 
             // Kategorileri oluşturma
             var categories = new List<Category>

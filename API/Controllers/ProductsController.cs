@@ -9,15 +9,15 @@ namespace API.Controllers
     public class ProductsController : BaseApiController
     {
         [HttpGet]
-        public async Task<ActionResult<List<Product>>> GetAllProducts()
+        public async Task<IActionResult> GetAllProducts()
         {
-            return await Mediator.Send(new GetAllProducts.Query());
+            return HandleResult(await Mediator.Send(new GetAllProducts.Query()));
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<Product>> GetProduct(Guid id)
+        public async Task<IActionResult> GetProduct(Guid id)
         {
-            return await Mediator.Send(new GetProduct.Query{Id = id});
+            return HandleResult(await Mediator.Send(new GetProduct.Query{Id = id}));
         }
 
         [HttpPost]

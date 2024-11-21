@@ -5,7 +5,6 @@ import agent from "../api/agent";
 export default class ProductStore {
     products: Product[] = [];
 
-
     constructor() {
         makeAutoObservable(this)
     }
@@ -20,4 +19,5 @@ export default class ProductStore {
             console.log(error);
         }
     }
+
 }

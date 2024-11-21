@@ -1,8 +1,5 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Domain;
+using FluentValidation;
 using MediatR;
 using Persistence;
 
@@ -13,6 +10,14 @@ namespace Application.Products
         public class Command : IRequest
         {
             public Product Product { get; set; }
+        }
+
+        public class CommandValidator : AbstractValidator<Command>
+        {
+            public CommandValidator()
+            {
+                RuleFor(x => x.Product).SetValidator(new ProductValidator());
+            }
         }
 
         public class Handler : IRequestHandler<Command>

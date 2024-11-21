@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { FaHeart } from "react-icons/fa";
 import { useStore } from "../../app/stores/store";
+import { useNavigate } from "react-router-dom";
 
 //const imgString1 =
 //  "https://cdn.cimri.io/image/188x188/rox-wood-0015-tas-mentese-yuvasi-acma-kilavuzu_280102670.jpg";
@@ -197,6 +198,7 @@ function Category() {
   //     image: "/assets/imgEx_2.webp",
   //   },
   // ];
+  const navigate = useNavigate();
 
   const { productStore } = useStore();
 
@@ -227,13 +229,20 @@ function Category() {
         </div>
 
         <div className="grid w-5/6 grid-cols-1 gap-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-          {productStore.products.map((product) => (
-            <Card
-              name={product.name}
-              price={product.price}
-              description={product.description}
-            />
-          ))}
+        {productStore.products.map((product) => (
+                <div
+                    key={product.id}
+                    onClick={() => navigate(`/detay/${product.id}`)}
+                    style={{ cursor: "pointer" }}
+                >
+                    <Card
+                        
+                        name={product.name}
+                        price={product.price}
+                        description={product.description}
+                    />
+                </div>
+            ))}
         </div>
       </div>
     </div>
