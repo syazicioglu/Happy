@@ -4,13 +4,42 @@ using System.Linq;
 using System.Threading.Tasks;
 using Domain;
 using Domain.Entities;
+using Microsoft.AspNetCore.Identity;
 
 namespace Persistence
 {
     public class Seed
     {
-        public static async Task SeedData(DataContext context)
+        public static async Task SeedData(DataContext context, UserManager<AppUser> userManager)
         {
+            if (!userManager.Users.Any())
+            {
+                var users = new List<AppUser>
+                {
+                    new AppUser
+                    {
+                        UserName = "john.doe",
+                        Email = "john.doe@example.com",
+                        FirstName = "John",
+                        LastName = "Doe",
+                        DateOfBirth = new DateTime(1990, 1, 1),
+                    },
+                    new AppUser
+                    {
+                        UserName = "jane.smith",
+                        Email = "jane.smith@example.com",
+                        FirstName = "Jane",
+                        LastName = "Smith",
+                        DateOfBirth = new DateTime(1985, 5, 15),
+                    }
+                };
+
+                foreach (var user in users)
+                {
+                    await userManager.CreateAsync(user, "Password123!"); // Şifreyi belirtmeyi unutmayın.
+                }   
+            }
+
             if (context.Products.Any() || context.Categories.Any()) return;
 
             // Kategorileri oluşturma

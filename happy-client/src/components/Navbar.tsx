@@ -221,7 +221,7 @@ function Header() {
                 <span className="text-sm">Hesabım</span>
                 {openDropdown === "account" && (
                   <div className="absolute top-9 -left-40 mt-2 w-62 bg-white shadow-lg rounded-md p-4 z-20 border border-[#ebecee]">
-                    <button className="bg-[#73845e] text-white mt-2 px-11 py-2 rounded-lg hover:bg-[#5a6d46] transition duration-300 w-full">
+                    <button onClick={() => navigate("/login")} className="bg-[#73845e] text-white mt-2 px-11 py-2 rounded-lg hover:bg-[#5a6d46] transition duration-300 w-full">
                       Giriş Yap
                     </button>
                     <button className="mt-2 px-11 py-2 rounded-lg border border-[#ebecee] hover:bg-[#f3f3f3] transition duration-300 w-full">

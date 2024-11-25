@@ -9,6 +9,7 @@ import AboutUsPage from "../../features/pages/AboutUsPage";
 import PaymentHomePage from "../../features/pages/PaymentHomePage";
 import CartPage from "../../features/pages/CartPage";
 import PaymentSuccessPage from "../../features/pages/PaymentSuccessPage";
+import AuthPage from "../../features/pages/AuthPage";
 
 export const routes: RouteObject[] = [
     {
@@ -32,6 +33,7 @@ export const routes: RouteObject[] = [
                 children: [
                     { path: "payment", element: <PaymentHomePage /> },
                     { path: "paymentsuccess", element: <PaymentSuccessPage /> },
+                    { path: "login", element: <AuthPage /> },
                 ],
             },
         ],
