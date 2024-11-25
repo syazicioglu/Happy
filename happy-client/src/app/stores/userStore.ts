@@ -21,6 +21,13 @@ export default class UserStore {
         runInAction(() => this.user = user);
         router.navigate("/");
     }
+    
+    register = async (creds: UserFormValues) => {
+        const user = await agent.Account.register(creds);
+        store.commonStore.setToken(user.token);
+        runInAction(() => this.user = user);
+        router.navigate("/");
+    }
 
     logout = () => {
         store.commonStore.setToken(null);

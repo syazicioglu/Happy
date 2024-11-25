@@ -212,7 +212,7 @@ function Category() {
     };
 
     fetchProducts();
-  }, [productStore]);
+  }, []);
 
   if (loading) {
     return <div className="flex h-96 items-center justify-center">

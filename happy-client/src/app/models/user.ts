@@ -8,5 +8,4 @@ export interface UserFormValues {
     password: string;
     firstname?: string;
     lastname?: string;
-    username?: string;
 }
