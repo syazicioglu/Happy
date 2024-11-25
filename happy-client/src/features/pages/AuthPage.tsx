@@ -1,8 +1,11 @@
 import { useState } from "react";
 import { FaGoogle } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
-import { Formik, Form, Field } from "formik";
+import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
+import { observer } from "mobx-react-lite";
+import { useStore } from "../../app/stores/store";
+import { values } from "mobx";
 
 
 export default function AuthPage() {
@@ -42,19 +45,17 @@ const SignInSchema = Yup.object().shape({
   password: Yup.string().required("Şifre gerekli"),
 });
 
-function SignIn() {
+const SignIn = observer(() => {
   const navigate = useNavigate();
 
-  const handleSignIn = (values:any) => {
-    console.log("Giriş bilgileri:", values);
-    // Giriş işlemini burada yapabilirsiniz.
-  };
+  const {userStore} = useStore();
 
   return (
     <Formik
-      initialValues={{ email: "", password: "" }}
+      initialValues={{ email: "", password: "", error: null }}
       validationSchema={SignInSchema}
-      onSubmit={handleSignIn}
+      onSubmit={(values, {setErrors} ) => userStore.login(values).catch(error => 
+        setErrors({error: "E-posta adresi veya şifre geçersiz"}))}
     >
       {({ errors, touched }) => (
         <Form>
@@ -80,6 +81,7 @@ function SignIn() {
               <div className="text-red-500 text-sm mt-1">{errors.password}</div>
             )}
           </div>
+          <ErrorMessage name="error" render={() => <label className="text-red-600">{errors.error}</label> } />
           <div className="px-6">
             <button
               type="submit"
@@ -102,7 +104,7 @@ function SignIn() {
       )}
     </Formik>
   );
-}
+});
 
 const SignUpSchema = Yup.object().shape({
   email: Yup.string().email("Geçerli bir e-posta girin").required("E-posta gerekli"),
