@@ -134,10 +134,10 @@ namespace API.Controllers
             return BadRequest("Kaydolurken bir hata meydana geldi");
         }
 
-        private int GenerateVerificationCode()
+        private string GenerateVerificationCode()
         {
             var random = new Random();
-            return random.Next(100000, 999999); // 6 basamaklı rastgele sayı
+            return random.Next(100000, 999999).ToString(); // 6 basamaklı rastgele sayı
         }
 
         [HttpPost("send-email")]

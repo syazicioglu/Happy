@@ -26,7 +26,7 @@ namespace API.Extensions
             var port = int.Parse(_configuration["EmailSettings:SmtpPort"]);
 
             var message = new MimeMessage();
-            message.From.Add(new MailboxAddress("YourAppName", email));
+            message.From.Add(new MailboxAddress("Happy", email));
             message.To.Add(new MailboxAddress(to, to));
             message.Subject = subject;
             message.Body = new TextPart("plain") { Text = body };

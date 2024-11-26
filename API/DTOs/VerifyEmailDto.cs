@@ -8,6 +8,6 @@ namespace API.DTOs
     public class VerifyEmailDto
     {
         public string Email { get; set; }
-        public int Code { get; set; } // 6 basamaklı sayı
+        public string Code { get; set; } // 6 basamaklı sayı
     }
 }
