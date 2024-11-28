@@ -1,5 +1,6 @@
 using System.Security.Claims;
 using API.DTOs;
+using API.DTOs.Validator;
 using API.Extensions;
 using API.Services;
 using Domain.Entities;
@@ -69,21 +70,33 @@ namespace API.Controllers
                 return ValidationProblem();
             }
 
-            // Doğrulama kodu üret
+
+            //biliyorum düzelticem
+            var validator = new RegisterDtoValidator();
+            var validationResult = await validator.ValidateAsync(registerDto);
+
+            if (!validationResult.IsValid)
+            {
+                foreach (var failure in validationResult.Errors)
+                {
+                    ModelState.AddModelError(failure.PropertyName, failure.ErrorMessage);
+                }
+
+                return ValidationProblem(ModelState);
+            }
+
             var verificationCode = GenerateVerificationCode();
 
-            // Kullanıcı bilgilerini ve doğrulama kodunu cache'e kaydet (10 dakika geçerli)
             var registrationData = new
             {
                 registerDto.Firstname,
                 registerDto.Lastname,
                 registerDto.Email,
-                registerDto.Password, // Şifre hash'lenmeden önce frontend'den gelir
+                registerDto.Password,
                 VerificationCode = verificationCode
             };
             memoryCache.Set(registerDto.Email, registrationData, TimeSpan.FromMinutes(10));
 
-            // Doğrulama e-postası gönder
             await _emailService.SendEmailAsync(
                 registerDto.Email,
                 "E-posta Doğrulama",
@@ -96,33 +109,30 @@ namespace API.Controllers
         [HttpPost("verify-email")]
         public async Task<ActionResult<UserDto>> VerifyEmail(VerifyEmailDto dto, [FromServices] IMemoryCache memoryCache)
         {
-            // Cache'den doğrulama bilgilerini al
             if (!memoryCache.TryGetValue(dto.Email, out dynamic registrationData))
             {
                 return BadRequest("Doğrulama kodu bulunamadı veya süresi doldu.");
             }
 
-            // Doğrulama kodu doğru mu kontrol et
             if (registrationData.VerificationCode != dto.Code)
             {
                 return BadRequest("Doğrulama kodu geçersiz.");
             }
 
-            // Kullanıcı oluştur
             var user = new AppUser
             {
                 FirstName = registrationData.Firstname,
                 LastName = registrationData.Lastname,
                 Email = dto.Email,
+                UserName = dto.Email,
                 EmailConfirmed = true
             };
 
             var result = await _userManager.CreateAsync(user, registrationData.Password);
 
-            // Cache'den doğrulama verisini temizle
             memoryCache.Remove(dto.Email);
 
-            if (result.Succeeded) 
+            if (result.Succeeded)
             {
                 return new UserDto
                 {
@@ -131,13 +141,13 @@ namespace API.Controllers
                 };
             }
 
-            return BadRequest("Kaydolurken bir hata meydana geldi");
+            return BadRequest("Kullanıcı oluşturulurken bir hata meydana geldi.");
         }
 
         private string GenerateVerificationCode()
         {
             var random = new Random();
-            return random.Next(100000, 999999).ToString(); // 6 basamaklı rastgele sayı
+            return random.Next(100000, 999999).ToString();
         }
 
         [HttpPost("send-email")]

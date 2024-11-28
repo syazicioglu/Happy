@@ -54,7 +54,7 @@ const SignIn = observer(() => {
       initialValues={{ email: "", password: "", error: null }}
       validationSchema={SignInSchema}
       onSubmit={(values, { setErrors }) => userStore.login(values).catch(error =>
-        setErrors({ error: "E-posta adresi veya şifre geçersiz" }))}
+        setErrors({ error }))}
     >
       {({ errors, touched }) => (
         <Form>
@@ -118,7 +118,7 @@ const SignUpSchema = Yup.object().shape({
     .max(50, "Soyad en fazla 50 karakter olabilir")
     .required("Soyad gerekli"),
   password: Yup.string()
-    .min(10, "Şifre en az 10 karakter olmalı")
+    .min(8, "Şifre en az 8 karakter olmalı")
     .matches(/[A-Z]/, "En az bir büyük harf içermeli")
     .matches(/[0-9]/, "En az bir rakam içermeli")
     .required("Şifre gerekli"),
@@ -192,7 +192,7 @@ const SignUp = observer(() => {
               ÜYE OL
             </button>
             <div className="text-xs text-[#666] mt-1">
-              *Şifreniz en az 10 karakter olmalı. 1 büyük harf ve rakam içermelidir.
+              *Şifreniz en az 8 karakter olmalı. Bir büyük harf ve rakam içermelidir.
             </div>
           </div>
           <div className="mt-6 text-center text-sm text-gray-500">veya</div>

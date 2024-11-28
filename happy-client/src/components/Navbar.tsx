@@ -82,6 +82,10 @@ function Header() {
 }
 
 const Body = observer(() => {
+
+  const [isHesabimDropdownOpen, setIsHesabimDropdownOpen] = useState(false);
+  const [isSepetimDropdownOpen, setIsSepetimDropdownOpen] = useState(false);
+
   const navigate = useNavigate();
 
   const handleToHomeClick = () => {
@@ -218,12 +222,13 @@ const Body = observer(() => {
             {/* Hesabım Dropdown */}
             <li
               className="relative flex items-center space-x-1 hover:text-[#73845e]"
-              onClick={() => handleDropdownToggle("account")}
+              onMouseEnter={() => setIsHesabimDropdownOpen(true)}
+              onMouseLeave={() => setIsHesabimDropdownOpen(false)}
             >
               <FaUser />
               <span className="text-sm">Hesabım</span>
-              {openDropdown === "account" && (
-                <div className="absolute top-9 -left-40 mt-2 w-62 bg-white shadow-lg rounded-md p-4 z-20 border border-[#ebecee]">
+              {isHesabimDropdownOpen && (
+                <div className="absolute top-4 -left-40 mt-2 w-62 bg-white shadow-lg rounded-md p-4 z-20 border border-[#ebecee]">
                   {userStore.isLoggedIn ? (
                     // Kullanıcı bilgileri varsa:
                     <div className="text-center">
@@ -263,7 +268,8 @@ const Body = observer(() => {
             {/* Sepetim Dropdown */}
             <li
               className="relative flex items-center space-x-1 hover:text-[#73845e]"
-              onClick={() => handleDropdownToggle("cart")}
+              onMouseEnter={() => setIsSepetimDropdownOpen(true)}
+              onMouseLeave={() => setIsSepetimDropdownOpen(false)}
             >
               <FaCartShopping />
               {cartItems.length > 0 && (
@@ -271,8 +277,8 @@ const Body = observer(() => {
                   {cartItems.length}
                 </span>
               )}
-              {openDropdown === "cart" && (
-                <div className="absolute top-9 -left-60 mt-2 w-90 bg-white shadow-lg rounded-md p-4 z-40 border border-[#ebecee]">
+              {cartItems.length > 0 && isSepetimDropdownOpen && (
+                <div className="absolute top-4 -left-60 mt-2 w-90 bg-white shadow-lg rounded-md p-4 z-40 border border-[#ebecee]">
                   <h3 className="font-bold mb-2 border-b pb-2">Sepetim</h3>
                   <ul className="space-y-2">
                     {cartItems.map((item) => (
@@ -280,15 +286,18 @@ const Body = observer(() => {
                         key={item.id}
                         className="flex items-center justify-between hover:bg-[#f3f3f3] rounded-lg p-2"
                       >
+                        <div className="flex">
+
                         <img
                           className="w-12 h-12 rounded border object-cover"
                           src={item.image}
                           alt={item.name}
-                        />
+                          />
                         <div className="pl-4 flex flex-col justify-between text-sm">
                           <span className="text-black">{item.name}</span>
                           <span>{item.price} TL</span>
                         </div>
+                          </div>
                         <button
                           onClick={() => handleRemoveItem(item.id)}
                           className="text-[#344f24] hover:text-red-700 mr-2"
