@@ -25,6 +25,9 @@ namespace Persistence.Migrations
                     b.Property<int>("AccessFailedCount")
                         .HasColumnType("INTEGER");
 
+                    b.Property<string>("BillingAddress")
+                        .HasColumnType("TEXT");
+
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
                         .HasColumnType("TEXT");
@@ -74,6 +77,9 @@ namespace Persistence.Migrations
                     b.Property<string>("SecurityStamp")
                         .HasColumnType("TEXT");
 
+                    b.Property<string>("ShippingAddress")
+                        .HasColumnType("TEXT");
+
                     b.Property<bool>("TwoFactorEnabled")
                         .HasColumnType("INTEGER");
 
@@ -102,7 +108,13 @@ namespace Persistence.Migrations
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("TEXT");
 
+                    b.Property<string>("UserId")
+                        .HasColumnType("TEXT");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("UserId")
+                        .IsUnique();
 
                     b.ToTable("Carts");
                 });
@@ -313,6 +325,15 @@ namespace Persistence.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
+            modelBuilder.Entity("Domain.Entities.Cart", b =>
+                {
+                    b.HasOne("Domain.Entities.AppUser", "User")
+                        .WithOne("Cart")
+                        .HasForeignKey("Domain.Entities.Cart", "UserId");
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("Domain.Entities.CartItem", b =>
                 {
                     b.HasOne("Domain.Entities.Cart", "Cart")
@@ -392,6 +413,11 @@ namespace Persistence.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("Domain.Entities.AppUser", b =>
+                {
+                    b.Navigation("Cart");
                 });
 
             modelBuilder.Entity("Domain.Entities.Cart", b =>

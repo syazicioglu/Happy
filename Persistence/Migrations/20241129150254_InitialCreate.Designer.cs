@@ -11,8 +11,8 @@ using Persistence;
 namespace Persistence.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20241121233345_IdentityAdded")]
-    partial class IdentityAdded
+    [Migration("20241129150254_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -29,9 +29,6 @@ namespace Persistence.Migrations
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("BillingAddress")
-                        .HasColumnType("TEXT");
-
-                    b.Property<Guid>("CartId")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("ConcurrencyStamp")
@@ -95,9 +92,6 @@ namespace Persistence.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CartId")
-                        .IsUnique();
-
                     b.HasIndex("NormalizedEmail")
                         .HasDatabaseName("EmailIndex");
 
@@ -117,10 +111,13 @@ namespace Persistence.Migrations
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("TEXT");
 
-                    b.Property<Guid>("UserId")
+                    b.Property<string>("UserId")
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("UserId")
+                        .IsUnique();
 
                     b.ToTable("Carts");
                 });
@@ -331,15 +328,13 @@ namespace Persistence.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("Domain.Entities.AppUser", b =>
+            modelBuilder.Entity("Domain.Entities.Cart", b =>
                 {
-                    b.HasOne("Domain.Entities.Cart", "Cart")
-                        .WithOne("User")
-                        .HasForeignKey("Domain.Entities.AppUser", "CartId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                    b.HasOne("Domain.Entities.AppUser", "User")
+                        .WithOne("Cart")
+                        .HasForeignKey("Domain.Entities.Cart", "UserId");
 
-                    b.Navigation("Cart");
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Domain.Entities.CartItem", b =>
@@ -423,11 +418,14 @@ namespace Persistence.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("Domain.Entities.AppUser", b =>
+                {
+                    b.Navigation("Cart");
+                });
+
             modelBuilder.Entity("Domain.Entities.Cart", b =>
                 {
                     b.Navigation("Items");
-
-                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Domain.Entities.Category", b =>

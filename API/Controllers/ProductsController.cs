@@ -1,3 +1,4 @@
+using Application.DTOs;
 using Application.Products;
 using Domain;
 using MediatR;
@@ -22,17 +23,16 @@ namespace API.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateProduct(Product product)
+        public async Task<IActionResult> CreateProduct(CreateProductDto productDto)
         {
-            await Mediator.Send(new CreateProduct.Command { Product = product});
+            await Mediator.Send(new CreateProduct.Command { CreateProductDto = productDto});
             return Ok();
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateProduct(Guid id, Product product)
+        public async Task<IActionResult> UpdateProduct(Guid id, CreateProductDto dto)
         {
-            product.Id = id;
-            await Mediator.Send(new UpdateProduct.Command { Product = product });
+            await Mediator.Send(new UpdateProduct.Command { Id = id, ProductDto = dto });
             return Ok();
         }
 

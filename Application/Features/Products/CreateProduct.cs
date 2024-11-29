@@ -1,3 +1,5 @@
+using Application.DTOs;
+using AutoMapper;
 using Domain;
 using FluentValidation;
 using MediatR;
@@ -9,28 +11,32 @@ namespace Application.Products
     {
         public class Command : IRequest
         {
-            public Product Product { get; set; }
+            public CreateProductDto CreateProductDto { get; set; }
         }
 
         public class CommandValidator : AbstractValidator<Command>
         {
             public CommandValidator()
             {
-                RuleFor(x => x.Product).SetValidator(new ProductValidator());
+                RuleFor(x => x.CreateProductDto).SetValidator(new CreateProductDtoValidator());
             }
         }
 
         public class Handler : IRequestHandler<Command>
         {
             private readonly DataContext _context;
-            public Handler(DataContext context)
+            private readonly IMapper _mapper;
+            public Handler(DataContext context, IMapper mapper)
             {
+                _mapper = mapper;
                 _context = context;
             }
 
             public async Task Handle(Command request, CancellationToken cancellationToken)
             {
-                _context.Products.Add(request.Product);
+                var product = _mapper.Map<Product>(request.CreateProductDto);
+
+                _context.Products.Add(product);
 
                 await _context.SaveChangesAsync();
             }
