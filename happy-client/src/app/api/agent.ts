@@ -1,6 +1,6 @@
 import axios, { AxiosResponse } from "axios";
 import { Product } from "../models/product";
-import { User, UserFormValues } from "../models/user";
+import { User, UserFormValues, VerifyEmailFormValues } from "../models/user";
 import { store } from "../stores/store";
 
 axios.defaults.baseURL = "http://localhost:5000/api"
@@ -31,7 +31,8 @@ const Products = {
 const Account = {
     current: () => requests.get<User>("/account"),
     login: (user: UserFormValues) => requests.post<User>("/account/login", user),
-    register: (user: UserFormValues) => requests.post<User>("/account/register", user)
+    register: (user: UserFormValues) => requests.post<User>("/account/register", user),
+    verifyEmail: (user: VerifyEmailFormValues) => requests.post<User>("/account/verify-email", user)
 }
 
 const agent = {

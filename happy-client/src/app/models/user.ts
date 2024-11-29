@@ -9,3 +9,8 @@ export interface UserFormValues {
     firstname?: string;
     lastname?: string;
 }
+
+export interface VerifyEmailFormValues {
+    email: string;
+    verificationCode: string;
+}

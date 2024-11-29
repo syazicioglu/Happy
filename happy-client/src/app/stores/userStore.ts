@@ -1,5 +1,5 @@
 import { makeAutoObservable, runInAction } from "mobx";
-import { User, UserFormValues } from "../models/user";
+import { User, UserFormValues, VerifyEmailFormValues } from "../models/user";
 import agent from "../api/agent";
 import { store } from "./store";
 import { router } from "../router/Routes";
@@ -23,10 +23,26 @@ export default class UserStore {
     }
     
     register = async (creds: UserFormValues) => {
-        const user = await agent.Account.register(creds);
+        await agent.Account.register(creds);
+        /*store.commonStore.setToken(user.token);
+        runInAction(() => this.user = user);
+        router.navigate("/");*/
+    }
+
+    verifyEmail = async (creds: VerifyEmailFormValues) => {
+        /*const user = await agent.Account.verifyEmail(creds);
         store.commonStore.setToken(user.token);
         runInAction(() => this.user = user);
-        router.navigate("/");
+        router.navigate("/");*/
+        try {
+            const user = await agent.Account.verifyEmail(creds);
+            store.commonStore.setToken(user.token);
+            runInAction(() => this.user = user);
+            router.navigate("/");
+        } catch (error) {
+            console.error("Doğrulama hatası:", error);
+            // Hata mesajını kullanıcıya gösterebilirsiniz
+        }
     }
 
     logout = () => {

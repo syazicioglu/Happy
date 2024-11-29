@@ -114,7 +114,7 @@ namespace API.Controllers
                 return BadRequest("Doğrulama kodu bulunamadı veya süresi doldu.");
             }
 
-            if (registrationData.VerificationCode != dto.Code)
+            if (registrationData.VerificationCode != dto.VerificationCode)
             {
                 return BadRequest("Doğrulama kodu geçersiz.");
             }
