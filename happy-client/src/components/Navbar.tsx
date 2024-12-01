@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { FaBars, FaFacebook, FaHeart, FaInstagram, FaTrash, FaUser } from "react-icons/fa";
+import { useEffect, useState } from "react";
+import { FaBars, FaFacebook, FaHeart, FaInstagram, FaUser } from "react-icons/fa";
 import { FaCartShopping, FaX } from "react-icons/fa6";
 import { useNavigate } from "react-router-dom";
 import { useStore } from "../app/stores/store";
@@ -96,26 +96,11 @@ const Body = observer(() => {
   };
   const [openDropdown, setOpenDropdown] = useState(null); // hangi dropdown açık tutuluyor
 
-  const { userStore } = useStore();
+  const { userStore, cartStore } = useStore();
 
-  const [cartItems, setCartItems] = useState([
-    {
-      id: 1,
-      name: "Dunya",
-      price: 54,
-      image: "assets/pro1.webp",
-    },
-    {
-      id: 2,
-      name: "Pizza Margherita",
-      price: 85,
-      image: "assets/pro1.webp",
-    },
-  ]);
-
-  const handleRemoveItem = (id: number) => {
-    setCartItems(cartItems.filter((item) => item.id !== id));
-  };
+  useEffect(() => {
+    cartStore.loadCart(); // Backend'den sepet verilerini yükle
+  }, [cartStore]);
 
   const handleDropdownToggle = (dropdownName: any) => {
     setOpenDropdown((prevDropdown) =>
@@ -265,53 +250,57 @@ const Body = observer(() => {
 
             </li>
 
-            {/* Sepetim Dropdown */}
             <li
               className="relative flex items-center space-x-1 hover:text-[#73845e]"
               onMouseEnter={() => setIsSepetimDropdownOpen(true)}
               onMouseLeave={() => setIsSepetimDropdownOpen(false)}
             >
               <FaCartShopping />
-              {cartItems.length > 0 && (
-                <span className="absolute bottom-2.5  left-1 bg-[#344f24] text-white text-xs rounded-full w-4 h-4 flex items-center justify-center ">
-                  {cartItems.length}
+              {cartStore.cart && cartStore.cart.items.length > 0 && (
+                <span className="absolute bottom-2.5 left-1 bg-[#344f24] text-white text-xs rounded-full w-4 h-4 flex items-center justify-center">
+                  {cartStore.cart.items.length}
                 </span>
               )}
-              {cartItems.length > 0 && isSepetimDropdownOpen && (
-                <div className="absolute top-4 -left-60 mt-2 w-90 bg-white shadow-lg rounded-md p-4 z-40 border border-[#ebecee]">
+              {isSepetimDropdownOpen && (
+                <div className="absolute top-4 -left-52 mt-2 w-90 bg-white shadow-lg rounded-md p-4 z-40 border border-[#ebecee]">
                   <h3 className="font-bold mb-2 border-b pb-2">Sepetim</h3>
-                  <ul className="space-y-2">
-                    {cartItems.map((item) => (
-                      <li
-                        key={item.id}
-                        className="flex items-center justify-between hover:bg-[#f3f3f3] rounded-lg p-2"
-                      >
-                        <div className="flex">
-
-                        <img
-                          className="w-12 h-12 rounded border object-cover"
-                          src={item.image}
-                          alt={item.name}
-                          />
-                        <div className="pl-4 flex flex-col justify-between text-sm">
-                          <span className="text-black">{item.name}</span>
-                          <span>{item.price} TL</span>
-                        </div>
-                          </div>
-                        <button
-                          onClick={() => handleRemoveItem(item.id)}
-                          className="text-[#344f24] hover:text-red-700 mr-2"
+                  {cartStore.cart && cartStore.cart.items.length > 0 ? (
+                    <ul className="space-y-2">
+                      {cartStore.cart.items.map((item) => (
+                        <li
+                          key={item.productId}
+                          className="flex hover:bg-[#f3f3f3] rounded-lg p-2"
                         >
-                          <FaTrash />
-                        </button>
-                      </li>
-                    ))}
-                  </ul>
-
-
-                  <button onClick={() => handleToCartClick()} className="mt-2 px-11 py-3 rounded-lg border border-[#ebecee] hover:bg-[#f3f3f3] transition duration-300 w-full text-sm">
-                    Sepete Git
-                  </button>
+                          <div className="flex">
+                            <img
+                              className="w-12 h-12 rounded border object-cover"
+                              src="https://cdn.cimri.io/image/188x188/rox-wood-0015-tas-mentese-yuvasi-acma-kilavuzu_280102670.jpg"
+                              alt={item.productName}
+                            />
+                            <div className="pl-4 flex flex-col justify-between text-sm">
+                              <span className="text-black">{item.productName}</span>
+                              <span>{item.price} TL</span>
+                            </div>
+                          </div>
+                          <div className="p-2">
+                            x{item.quantity}
+                          </div>
+                        </li>
+                      ))}
+                    </ul>
+                  ) : (
+                    <div className="text-gray-500 text-center py-4">
+                      Sepetiniz boş
+                    </div>
+                  )}
+                  {cartStore.cart && cartStore.cart.items.length > 0 && (
+                    <button
+                      onClick={() => handleToCartClick()}
+                      className="mt-2 px-11 py-3 rounded-lg border border-[#ebecee] hover:bg-[#f3f3f3] transition duration-300 w-full text-sm"
+                    >
+                      Sepete Git
+                    </button>
+                  )}
                 </div>
               )}
             </li>
@@ -321,7 +310,6 @@ const Body = observer(() => {
     </>
   );
 });
-
 
 
 function Menu() {

@@ -2,6 +2,7 @@ import axios, { AxiosResponse } from "axios";
 import { Product } from "../models/product";
 import { User, UserFormValues, VerifyEmailFormValues } from "../models/user";
 import { store } from "../stores/store";
+import { Cart } from "../models/cart";
 
 axios.defaults.baseURL = "http://localhost:5000/api"
 
@@ -35,9 +36,16 @@ const Account = {
     verifyEmail: (user: VerifyEmailFormValues) => requests.post<User>("/account/verify-email", user)
 }
 
+const Carts = {
+    get: () => requests.get<Cart>("/carts"),
+    update: (productId: string, quantity: number) =>
+        requests.post<void>("/carts/update", { productId, quantity })
+};
+
 const agent = {
     Products,
-    Account
+    Account,
+    Carts
 }
 
 export default  agent;

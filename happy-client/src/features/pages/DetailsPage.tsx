@@ -15,14 +15,13 @@ const staticImages = [
 ];
 
 export default function ProductDetail() {
-  const { productStore } = useStore();
+  const { productStore, cartStore } = useStore();
   const { id } = useParams();
   const product = productStore.products.find((p) => p.id === id);
 
   if (!product) {
     return <div>Ürün bulunamadı!</div>;
   }
-
   //const productImages = product.images?.length ? product.images : staticImages;
   const productImages = staticImages;
 
@@ -95,7 +94,8 @@ export default function ProductDetail() {
           {product.price} TL
         </div>
         <p className="text-gray-600 leading-relaxed">{product.description}</p>
-        <button className="bg-[#73845e] text-white w-full px-6 py-2 mt-4 rounded-lg hover:bg-[#5a6d46] transition duration-300 flex items-center justify-center space-x-2">
+        <button className="bg-[#73845e] text-white w-full px-6 py-2 mt-4 rounded-lg hover:bg-[#5a6d46] transition duration-300 flex items-center justify-center space-x-2"
+          onClick={() => cartStore.updateCart(product.id, 1)}>
           <span>Sepete Ekle</span>
         </button>
         <div className="mt-6">
