@@ -3,21 +3,20 @@ import { Product } from "../models/product";
 import agent from "../api/agent";
 
 export default class ProductStore {
-    products: Product[] = [];
+  products: Product[] = [];
 
-    constructor() {
-        makeAutoObservable(this)
+  constructor() {
+    makeAutoObservable(this);
+  }
+
+  loadProducts = async () => {
+    try {
+      this.products = await agent.Products.list();
+      // products.forEach(product => {
+      //     this.products.push(product);
+      // })
+    } catch (error) {
+      console.log(error);
     }
-
-    loadProducts = async () => {
-        try {
-            const products = await agent.Products.list();
-            products.forEach(product => {
-                this.products.push(product);
-            })
-        } catch (error) {
-            console.log(error);
-        }
-    }
-
+  };
 }
